@@ -1,0 +1,49 @@
+//dc motor
+
+#include<p18f458.h>
+
+#pragma config OSC=HS
+#pragma config WDT=OFF
+#pragma config LVP=OFF
+
+#define sw PORTBbits.RB0
+#define mtr1 PORTCbits.RC0
+#define mtr2 PORTCbits.RC1
+
+void delay(unsigned int);
+
+void main(void)
+{
+	TRISBbits.TRISB0=1;
+	TRISCbits.TRISC0=0;
+	TRISCbits.TRISC1=0;
+
+	while(1)
+	{
+		mtr2=0;
+		if(sw==0)
+		{
+			mtr1=1;
+			delay(90);
+			mtr1=0;
+			delay(10);
+		}
+		else
+		{
+			mtr1=1;
+			delay(10);
+			mtr1=0;
+			delay(90);
+		}
+	}
+}
+
+void delay(unsigned int val)
+{
+	unsigned int x;
+	unsigned char y;
+	for(x=0;x<val;x++)
+	{
+		for(y=0;y<165;y++);
+	}
+}

@@ -1,0 +1,71 @@
+//led blinking
+
+#include<p18f458.h>
+
+#pragma config OSC=HS
+#pragma config WDT=OFF
+#pragma config LVP=OFF
+
+#define but1 PORTBbits.RB0
+#define led0 PORTDbits.RD4
+#define led1 PORTDbits.RD5
+#define led2 PORTDbits.RD6
+#define led3 PORTDbits.RD7
+
+void ledltorseq(void);
+void delayms(unsigned int);
+
+void main(void)
+{
+	TRISBbits.RB0=1;
+	TRISD=0;
+	PORTD=0xFF;
+	
+	while(1)
+	{
+		if(but1==0)
+		{
+			while(1)
+			{
+				ledltorseq();
+			}
+		}
+	}
+}
+
+void ledltorseq(void)
+{
+	led0=0;
+	led1=1;
+	led2=1;
+	led3=1;
+	delayms(200);
+
+	led0=1;
+	led1=0;
+	led2=1;
+	led3=1;
+	delayms(200);
+
+	led0=1;
+	led1=1;
+	led2=0;
+	led3=1;
+	delayms(200);
+
+	led0=1;
+	led1=1;
+	led2=1;
+	led3=0;
+	delayms(200);
+}
+
+void delayms(unsigned int val)
+{
+	unsigned int x;
+	unsigned char y;
+	for(x=0;x<val;x++)
+	{
+		for(y=0;y<165;y++);
+	}
+}

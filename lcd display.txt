@@ -1,0 +1,139 @@
+//lcd display
+
+#include<p18f458.h>
+
+#pragma config OSC=HS
+#pragma config WDT=OFF
+#pragma config LVP=OFF
+
+#define d4 LATCbits.LATC2
+#define d5 LATEbits.LATE0
+#define d6 LATEbits.LATE1
+#define d7 LATEbits.LATE2
+#define rs LATCbits.LATC0
+#define en LATCbits.LATC1
+
+void lcdcmd(unsigned char cmd);
+void lcdcmd1(unsigned char cmd);
+void lcddata(unsigned char data);
+void lcddata1(unsigned char data);
+void delay(unsigned int);
+
+void main(void)
+{
+	TRISCbits.TRISC0=0;
+	TRISCbits.TRISC1=0;
+	TRISCbits.TRISC2=0;
+	TRISEbits.TRISE0=0;
+	TRISEbits.TRISE1=0;
+	TRISEbits.TRISE2=0;
+
+	rs=0;
+	en=0;
+	d4=0;
+	d5=0;
+	d5=0;
+	d6=0;
+	d7=0;
+
+	lcdcmd(0x28); //4 line to 2 line display
+	lcdcmd(0x0C); //display on cursor off
+	lcdcmd(0x01); //clear display
+	lcdcmd(0x06); //increment cursor
+	lcdcmd(0x80); //1st line 1st row
+
+	lcddata('v');
+	lcddata('p');
+
+	lcdcmd(0xC0); //2nd line first row62
+	
+	lcddata('c');
+	lcddata('o');
+	lcddata('e');
+
+	while(1);
+}
+
+void lcdcmd(unsigned char cmd)
+{
+	lcdcmd1(cmd>>4);
+	lcdcmd1(cmd && 0x0F);
+	delay(200);
+}
+
+void lcdcmd1(unsigned char cmd)
+{
+	if(cmd && 0x01)
+		d4=1;
+	else
+		d4=0;
+	
+	if(cmd && 0x02)
+		d5=1;
+	else
+		d5=0;
+
+
+	if(cmd && 0x04)
+		d6=1;
+	else
+		d6=0;
+
+
+	if(cmd && 0x08)
+		d7=1;
+	else
+		d7=0;
+
+	rs=0;
+	en=1;
+	delay(1);
+	en=0
+}
+
+void lcddata(unsigned char data)
+{
+	lcddata1(data>>4);
+	lcddata1(data && 0x0F);
+	delay(200);
+}
+
+void lcddata1(unsigned char data)
+{
+	if(data && 0x01)
+		d4=1;
+	else
+		d4=0;
+	
+	if(data && 0x02)
+		d5=1;
+	else
+		d5=0;
+
+
+	if(data && 0x04)
+		d6=1;
+	else
+		d6=0;
+
+
+	if(data && 0x08)
+		d7=1;
+	else
+		d7=0;
+
+	rs=0;
+	en=1;
+	delay(1);
+	en=0
+}
+
+void delayms(unsigned int val)
+{
+	unsigned int x;
+	unsigned char y;
+	for(x=0;x<val;x++)
+	{
+		for(y=0;y<165;y++);
+	}
+}
